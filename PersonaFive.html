@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona 5 Royal - Welcome</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Roboto+Condensed:wght@300;400;700&family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ff0000, #cc0000);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+        
+        /* Background Layers */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .bg-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0000 0%, #000000 25%, #330000 50%, #000000 75%, #1a0000 100%);
+        }
+        
+        .bg-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,0,0,0.05) 2px, rgba(255,0,0,0.05) 4px),
+                radial-gradient(circle at 25% 25%, rgba(255,0,0,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255,0,0,0.08) 0%, transparent 50%);
+            animation: patternMove 20s linear infinite;
+        }
+        
+        @keyframes patternMove {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-100px) translateY(-100px); }
+        }
+        
+        /* Main Interface Container */
+        .interface {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Top HUD Bar */
+        .hud-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(26,0,0,0.9), rgba(0,0,0,0.9));
+            border-bottom: 2px solid #ff0000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .hud-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #ff0000, #cc0000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: 1.2rem;
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { box-shadow: 0 0 10px #ff0000; }
+            50% { box-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000; }
+        }
+        
+        .logo-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ff0000;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-item {
+            color: #ccc;
+            text-decoration: none;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.5rem 1rem;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,0,0,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .nav-item:hover {
+            color: #ff0000;
+            border-color: #ff0000;
+            transform: translateY(-2px);
+        }
+        
+        .nav-item:hover::before {
+            left: 100%;
+        }
+        
+        .hud-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .status-indicator {
+            padding: 0.25rem 0.75rem;
+            background: rgba(255,0,0,0.2);
+            border: 1px solid #ff0000;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: statusBlink 3s ease-in-out infinite;
+        }
+        
+        @keyframes statusBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Main Welcome Section */
+        .welcome-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .welcome-container {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .welcome-content {
+            z-index: 2;
+        }
+        
+        .welcome-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #ff0000, #ffffff, #ff0000);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGradient 4s ease-in-out infinite;
+        }
+        
+        @keyframes titleGradient {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 0% 100%; }
+            75% { background-position: 100% 0%; }
+        }
+        
+        .welcome-subtitle {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            animation: typewriter 3s steps(30) 1s both;
+        }
+        
+        @keyframes typewriter {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+        
+        .welcome-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #ccc;
+            margin-bottom: 3rem;
+            max-width: 500px;
+        }
+        
+        /* Interactive UI Panels */
+        .ui-panels {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .ui-panel {
+            background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(0,0,0,0.8));
+            border: 1px solid rgba(255,0,0,0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ui-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff0000, transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .ui-panel:hover {
+            transform: translateX(10px);
+            border-color: #ff0000;
+            box-shadow: -10px 0 30px rgba(255,0,0,0.2);
+        }
+        
+        .ui-panel:hover::before {
+            left: 100%;
+        }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .panel-icon {
+            width: 30px;
+            height: 30px;
+            background: #ff0000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .panel-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #ff0000;
+        }
+        
+        .panel-description {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: 2px solid #ff0000;
+            background: transparent;
+            color: #ff0000;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #ff0000;
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        
+        .btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,0,0,0.3);
+        }
+        
+        .btn:hover::before {
+            left: 0;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #ff3333, #ff0000);
+        }
+        
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 2px solid rgba(255,0,0,0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-element:nth-child(1) {
+            top: 20%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-element:nth-child(2) {
+            bottom: 30%;
+            left: 15%;
+            animation-delay: 2s;
+        }
+        
+        .floating-element:nth-child(3) {
+            top: 60%;
+            right: 5%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(20px) rotate(240deg); }
+        }
+        
+        /* Bottom HUD */
+        .hud-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(26,0,0,0.9), rgba(0,0,0,0.9));
+            border-top: 2px solid #ff0000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+        }
+        
+        .progress-container {
+            flex: 1;
+            max-width: 400px;
+        }
+        
+        .progress-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #ff0000;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff3333);
+            width: 75%;
+            animation: progressPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes progressPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .system-info {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .info-value {
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, rgba(26,0,0,0.95), rgba(0,0,0,0.95));
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .welcome-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+            
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .hud-top, .hud-bottom {
+                padding: 0 1rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    
+    <div class="bg-container">
+        <div class="bg-layer"></div>
+        <div class="bg-pattern"></div>
+    </div>
+    
+    <div class="interface">
+        <!-- Top HUD -->
+        <div class="hud-top">
+            <div class="hud-left">
+                <div class="logo-container">
+                    <div class="logo-icon">P5</div>
+                    <div class="logo-text">Persona 5 Royal</div>
+                </div>
+                <nav class="nav-menu">
+                    <a href="#" class="nav-item">Palace</a>
+                    <a href="#" class="nav-item">Personas</a>
+                    <a href="#" class="nav-item">Confidants</a>
+                    <a href="#" class="nav-item">Velvet Room</a>
+                </nav>
+            </div>
+            <div class="hud-right">
+                <div class="status-indicator">Online</div>
+            </div>
+        </div>
+        
+        <!-- Main Welcome Section -->
+        <div class="welcome-section">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            
+            <div class="welcome-container">
+                <div class="welcome-content">
+                    <h1 class="welcome-title">Welcome</h1>
+                    <div class="welcome-subtitle">Phantom Thief</div>
+                    <p class="welcome-description">
+                        The world is full of corrupt adults who exploit the innocent. It's time to change their hearts and steal back what was taken. Your rebellion begins now.
+                    </p>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="startJourney()">Begin Journey</button>
+                        <button class="btn" onclick="showOptions()">Settings</button>
+                    </div>
+                </div>
+                
+                <div class="ui-panels">
+                    <div class="ui-panel" onclick="selectOption('palace')">
+                        <div class="panel-header">
+                            <div class="panel-icon">🏰</div>
+                            <div class="panel-title">Enter Palace</div>
+                        </div>
+                        <div class="panel-description">
+                            Infiltrate the twisted desires of corrupt hearts and steal their treasure.
+                        </div>
+                    </div>
+                    
+                    <div class="ui-panel" onclick="selectOption('velvet')">
+                        <div class="panel-header">
+                            <div class="panel-icon">🎭</div>
+                            <div class="panel-title">Velvet Room</div>
+                        </div>
+                        <div class="panel-description">
+                            Strengthen your bonds and fuse powerful Personas to aid in battle.
+                        </div>
+                    </div>
+                    
+                    <div class="ui-panel" onclick="selectOption('real')">
+                        <div class="panel-header">
+                            <div class="panel-icon">🌆</div>
+                            <div class="panel-title">Real World</div>
+                        </div>
+                        <div class="panel-description">
+                            Live your daily life, build relationships, and prepare for the next heist.
+                        </div>
+                    </div>
+                    
+                    <div class="ui-panel" onclick="selectOption('thieves')">
+                        <div class="panel-header">
+                            <div class="panel-icon">⚡</div>
+                            <div class="panel-title">Phantom Thieves</div>
+                        </div>
+                        <div class="panel-description">
+                            Coordinate with your team and plan your next target's downfall.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom HUD -->
+        <div class="hud-bottom">
+            <div class="progress-container">
+                <div class="progress-label">Heart Status</div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+            
+            <div class="system-info">
+                <div class="info-item">
+                    <div class="info-value">04/15</div>
+                    <div>Date</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">Evening</div>
+                    <div>Time</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">Sunny</div>
+                    <div>Weather</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h2 style="color: #ff0000; margin-bottom: 1rem;">System Message</h2>
+            <p id="modalText">Your heart is ready for rebellion...</p>
+            <button class="btn btn-primary" onclick="closeModal()" style="margin-top: 1rem;">Confirm</button>
+        </div>
+    </div>
+    
+    <script>
+        // Custom cursor follow
+        const cursor = document.querySelector('.cursor');
+        let mouseX = 0, mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function updateCursor() {
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            requestAnimationFrame(updateCursor);
+        }
+        updateCursor();
+        
+        // Interactive sound effects simulation
+        function playSound(type) {
+            // Visual feedback for sound
+            const cursor = document.querySelector('.cursor');
+            cursor.style.transform = 'scale(1.5)';
+            setTimeout(() => {
+                cursor.style.transform = 'scale(1)';
+            }, 100);
+        }
+        
+        // UI Panel interactions
+        function selectOption(option) {
+            playSound('select');
+            const messages = {
+                palace: "Entering the Palace... Prepare for infiltration!",
+                velvet: "Welcome to the Velvet Room. Your journey of self-discovery begins.",
+                real: "Time to live your student life. Don't forget your responsibilities.",
+                thieves: "The Phantom Thieves assemble. Justice will be served."
+            };
+            showModal(messages[option]);
+        }
+        
+        function startJourney() {
+            playSound('confirm');
+            showModal("Your rebellion begins now. Remember: Take your time...");
+        }
+        
+        function showOptions() {
+            playSound('menu');
+            showModal("System settings accessed. Configure your Phantom Thief experience.");
+        }
+        
+        function showModal(text) {
+            document.getElementById('modalText').textContent = text;
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            playSound('back');
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+        
+        // Click outside modal to close
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeModal();
+            }
+        });
+        
+        // Add hover effects with sound
+        document.querySelectorAll('.ui-panel, .btn, .nav-item').forEach(element => {
+            element.addEventListener('mouseenter', () => playSound('hover'));
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'Enter':
+                    playSound('confirm');
+                    break;
+                case 'Escape':
+                    closeModal();
+                    break;
+            }
+        });
+        
+        // Dynamic time update
+        function updateTime() {
+            const timeElement = document.querySelector('.info-item .info-value');
+            const times = ['Morning', 'Afternoon', 'Evening', 'Night'];
+            let currentTime = 0;
+            
+            setInterval(() => {
+                if (timeElement) {
+                    timeElement.textContent = times[currentTime];
+                    currentTime = (currentTime + 1) % times.length;
+                }
+            }, 5000);
+        }
+        
+        // Progress bar animation
+        function animateProgress() {
+            const progressFill = document.querySelector('.progress-fill');
+            let width = 75;
+            let increasing = true;
+            
+            setInterval(() => {
+                if (increasing) {
+                    width += 1;
+                    if (width >= 100) increasing = false;
+                } else {
+                    width -= 1;
+                    if (width <= 50) increasing = true;
+                }
+                progressFill.style.width = width + '%';
+            }, 100);
+        }
+        
+        // Initialize dynamic elements
+        updateTime();
+        animateProgress();
+        
+        // Add parallax effect to floating elements
+        document.addEventListener('mousemove', (e) => {
+            const floatingElements = document.querySelectorAll('.floating-element');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            floatingElements.forEach((element, index) => {
+                const speed = (index + 1) * 0.05;
+                const x = (mouseX - 0.5) * 50 * speed;
+                const y = (mouseY - 0.5) * 50 * speed;
+                element.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+        
+        // Screen flash effect for dramatic moments
+        function screenFlash() {
+            const flash = document.createElement('div');
+            flash.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #ff0000;
+                opacity: 0.3;
+                z-index: 9998;
+                pointer-events: none;
+                animation: flashFade 0.3s ease-out;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes flashFade {
+                    0% { opacity: 0.3; }
+                    50% { opacity: 0.6; }
+                    100% { opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(flash);
+            
+            setTimeout(() => {
+                document.body.removeChild(flash);
+                document.head.removeChild(style);
+            }, 300);
+        }
+        
+        // Add screen flash to dramatic actions
+        document.querySelector('.btn-primary').addEventListener('click', screenFlash);
+    </script>
+</body>
+</html>
