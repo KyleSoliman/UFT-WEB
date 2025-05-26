@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palace Guide - Persona 5 Royal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Roboto+Condensed:wght@300;400;700&family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ff0000, #cc0000);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+        
+        /* Background */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .bg-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0000 0%, #000000 25%, #330000 50%, #000000 75%, #1a0000 100%);
+        }
+        
+        .bg-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,0,0,0.05) 2px, rgba(255,0,0,0.05) 4px),
+                radial-gradient(circle at 25% 25%, rgba(255,0,0,0.1) 0%, transparent 50%);
+            animation: patternMove 20s linear infinite;
+        }
+        
+        @keyframes patternMove {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-100px) translateY(-100px); }
+        }
+        
+        /* Top HUD */
+        .hud-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.95), rgba(26,0,0,0.95), rgba(0,0,0,0.95));
+            border-bottom: 2px solid #ff0000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ff0000;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            color: #fff;
+            transform: translateX(-5px);
+        }
+        
+        .page-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ff0000;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .wiki-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .wiki-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: linear-gradient(45deg, #ffffff, #ff0000, #ffffff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleShine 3s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes titleShine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .wiki-subtitle {
+            font-size: 1.1rem;
+            color: #ccc;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Palace Grid */
+        .palace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .palace-card {
+            background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(0,0,0,0.9));
+            border: 2px solid rgba(255,0,0,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .palace-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,0,0,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .palace-card:hover {
+            transform: translateY(-10px);
+            border-color: #ff0000;
+            box-shadow: 0 20px 40px rgba(255,0,0,0.2);
+        }
+        
+        .palace-card:hover::before {
+            left: 100%;
+        }
+        
+        .palace-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,0,0,0.3);
+        }
+        
+        .palace-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .palace-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .palace-ruler {
+            font-size: 1rem;
+            color: #ff0000;
+            font-weight: 600;
+        }
+        
+        .palace-content {
+            padding: 1.5rem;
+        }
+        
+        .palace-description {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #ccc;
+            margin-bottom: 1.5rem;
+        }
+        
+        .palace-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .detail-item {
+            background: rgba(255,0,0,0.1);
+            border: 1px solid rgba(255,0,0,0.2);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+        
+        .detail-label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-value {
+            color: #fff;
+            font-size: 0.95rem;
+        }
+        
+        .palace-theme {
+            grid-column: 1 / -1;
+            background: rgba(255,0,0,0.05);
+            border: 1px solid rgba(255,0,0,0.15);
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, rgba(255,0,0,0.15), rgba(0,0,0,0.8));
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .info-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            color: #ff0000;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        
+        .info-text {
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .palace-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .wiki-title {
+                font-size: 2rem;
+            }
+            
+            .palace-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+        }
+        
+        /* Scroll Animations */
+        .palace-card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .palace-card:nth-child(1) { animation-delay: 0.1s; }
+        .palace-card:nth-child(2) { animation-delay: 0.2s; }
+        .palace-card:nth-child(3) { animation-delay: 0.3s; }
+        .palace-card:nth-child(4) { animation-delay: 0.4s; }
+        .palace-card:nth-child(5) { animation-delay: 0.5s; }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    
+    <div class="bg-container">
+        <div class="bg-layer"></div>
+        <div class="bg-pattern"></div>
+    </div>
+    
+    <!-- Top HUD -->
+    <div class="hud-top">
+        <a href="javascript:history.back()" class="back-btn">
+            ← Back to Menu
+        </a>
+        <div class="page-title">Palace Database</div>
+        <div style="width: 120px;"></div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="wiki-header">
+            <h1 class="wiki-title">Palace Guide</h1>
+            <p class="wiki-subtitle">
+                Explore the twisted desires of corrupt adults. Each Palace represents the distorted heart of its ruler, 
+                manifested as a supernatural domain where their darkest impulses take physical form.
+            </p>
+        </div>
+        
+        <div class="info-box">
+            <div class="info-title">Metaverse Navigation</div>
+            <p class="info-text">
+                Palaces are born from the distorted desires of corrupt adults. To steal their Treasure and change their heart,
+                the Phantom Thieves must infiltrate these cognitive domains and overcome the Shadow that rules within.
+            </p>
+        </div>
+        
+        <div class="palace-grid">
+            <!-- Palace 1: Kamoshida -->
+            <div class="palace-card">
+                <div class="palace-header">
+                    <div class="palace-number">First Palace</div>
+                    <div class="palace-name">Castle of Lust</div>
+                    <div class="palace-ruler">Kamoshida Suguru</div>
+                </div>
+                <div class="palace-content">
+                    <p class="palace-description">
+                        A grand medieval castle where Kamoshida reigns as a tyrannical king. Students are treated as slaves and trophies, 
+                        reflecting his view of Shujin Academy as his personal kingdom. The castle's opulent halls hide dark dungeons 
+                        where his victims suffer, representing his abuse of power and predatory behavior toward students.
+                    </p>
+                    <div class="palace-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Location</div>
+                            <div class="detail-value">Shujin Academy</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Ruler's Sin</div>
+                            <div class="detail-value">Sexual Harassment</div>
+                        </div>
+                        <div class="detail-item palace-theme">
+                            <div class="detail-label">Theme</div>
+                            <div class="detail-value">
+                                Abuse of authority and power. The castle represents Kamoshida's belief that he owns everything 
+                                and everyone at the school, treating students as his personal property.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Palace 2: Madarame -->
+            <div class="palace-card">
+                <div class="palace-header">
+                    <div class="palace-number">Second Palace</div>
+                    <div class="palace-name">Museum of Vanity</div>
+                    <div class="palace-ruler">Madarame Ichiryusai</div>
+                </div>
+                <div class="palace-content">
+                    <p class="palace-description">
+                        An elaborate art museum filled with stolen masterpieces and replicas. Madarame appears as a golden, 
+                        jewel-encrusted figure obsessed with fame and fortune. The museum's twisted layout reflects his duplicitous nature, 
+                        with hidden passages and false walls representing his lies and plagiarism of his students' work.
+                    </p>
+                    <div class="palace-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Location</div>
+                            <div class="detail-value">Madarame's Shack</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Ruler's Sin</div>
+                            <div class="detail-value">Plagiarism & Fraud</div>
+                        </div>
+                        <div class="detail-item palace-theme">
+                            <div class="detail-label">Theme</div>
+                            <div class="detail-value">
+                                Artistic exploitation and greed. The museum showcases Madarame's view of art as mere commodity, 
+                                stealing credit from his pupils while basking in false glory.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Palace 3: Kaneshiro -->
+            <div class="palace-card">
+                <div class="palace-header">
+                    <div class="palace-number">Third Palace</div>
+                    <div class="palace-name">Bank of Gluttony</div>
+                    <div class="palace-ruler">Kaneshiro Junya</div>
+                </div>
+                <div class="palace-content">
+                    <p class="palace-description">
+                        A massive underground bank vault floating in a void, representing Kaneshiro's view of people as walking ATMs. 
+                        The palace is filled with security systems, safes, and money-counting machines. Customers appear as floating 
+                        piggybanks, reflecting how he sees everyone as sources of income through blackmail and extortion.
+                    </p>
+                    <div class="palace-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Location</div>
+                            <div class="detail-value">Shibuya</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Ruler's Sin</div>
+                            <div class="detail-value">Blackmail & Extortion</div>
+                        </div>
+                        <div class="detail-item palace-theme">
+                            <div class="detail-label">Theme</div>
+                            <div class="detail-value">
+                                Greed and commodification of people. The bank represents Kaneshiro's belief that everyone exists 
+                                solely to generate money for him through manipulation and threats.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Palace 4: Okumura -->
+            <div class="palace-card">
+                <div class="palace-header">
+                    <div class="palace-number">Fourth Palace</div>
+                    <div class="palace-name">Spaceport of Greed</div>
+                    <div class="palace-ruler">Okumura Kunikazu</div>
+                </div>
+                <div class="palace-content">
+                    <p class="palace-description">
+                        A futuristic space station where employees are treated like expendable robots on an assembly line. 
+                        Workers wear identical uniforms and are managed by robot supervisors. The palace reflects Okumura's 
+                        corporate philosophy of treating people as disposable resources, with profit margins taking priority over human welfare.
+                    </p>
+                    <div class="palace-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Location</div>
+                            <div class="detail-value">Okumura Foods HQ</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Ruler's Sin</div>
+                            <div class="detail-value">Corporate Exploitation</div>
+                        </div>
+                        <div class="detail-item palace-theme">
+                            <div class="detail-label">Theme</div>
+                            <div class="detail-value">
+                                Dehumanization through capitalism. The spaceport represents how Okumura views his employees 
+                                as mechanical parts in his profit machine, disposable and replaceable.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Palace 5: Nijima -->
+            <div class="palace-card">
+                <div class="palace-header">
+                    <div class="palace-number">Fifth Palace</div>
+                    <div class="palace-name">Casino of Envy</div>
+                    <div class="palace-ruler">Niijima Sae</div>
+                </div>
+                <div class="palace-content">
+                    <p class="palace-description">
+                        A luxurious casino where justice is determined by rigged games and loaded dice. Sae appears as a dealer 
+                        who controls every game, ensuring she always wins. The palace represents her distorted view of the justice system 
+                        as a game where only victory matters, regardless of truth or fairness. Court cases become gambling matches.
+                    </p>
+                    <div class="palace-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Location</div>
+                            <div class="detail-value">Courthouse</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Ruler's Sin</div>
+                            <div class="detail-value">Corruption of Justice</div>
+                        </div>
+                        <div class="detail-item palace-theme">
+                            <div class="detail-label">Theme</div>
+                            <div class="detail-value">
+                                Obsession with winning at any cost. The casino represents how Sae has twisted the concept of justice 
+                                into a zero-sum game where truth becomes secondary to achieving victory.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <div class="info-title">Remember</div>
+            <p class="info-text">
+                Each Palace must be infiltrated before the deadline, or the target's heart will become irreversibly twisted. 
+                The Phantom Thieves must work together to navigate these treacherous domains and steal the Treasure that lies at their core.
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Custom cursor follow
+        const cursor = document.querySelector('.cursor');
+        let mouseX = 0, mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function updateCursor() {
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            requestAnimationFrame(updateCursor);
+        }
+        updateCursor();
+        
+        // Interactive sound effects simulation
+        function playSound(type) {
+            const cursor = document.querySelector('.cursor');
+            cursor.style.transform = 'scale(1.5)';
+            setTimeout(() => {
+                cursor.style.transform = 'scale(1)';
+            }, 100);
+        }
+        
+        // Add hover effects
+        document.querySelectorAll('.palace-card, .back-btn').forEach(element => {
+            element.addEventListener('mouseenter', () => playSound('hover'));
+        });
+        
+        // Enhanced card interactions
+        document.querySelectorAll('.palace-card').forEach(card => {
+            card.addEventListener('click', () => {
+                playSound('select');
+                card.style.transform = 'translateY(-15px) scale(1.02)';
+                setTimeout(() => {
+                    card.style.transform = 'translateY(-10px) scale(1)';
+                }, 200);
+            });
+        });
+        
+        // Parallax effect for background
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            const bgPattern = document.querySelector('.bg-pattern');
+            const offsetX = (mouseX - 0.5) * 20;
+            const offsetY = (mouseY - 0.5) * 20;
+            
+            bgPattern.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        });
+        
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.palace-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

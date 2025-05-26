@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Room Wiki - Persona 5 Royal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Roboto+Condensed:wght@300;400;700&family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: linear-gradient(135deg, #001122 0%, #000811 25%, #1a0044 50%, #000811 75%, #001122 100%);
+            color: #fff;
+            min-height: 100vh;
+            cursor: none;
+            overflow-x: hidden;
+        }
+        
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #4444ff, #2222cc);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+        
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(68,68,255,0.05) 2px, rgba(68,68,255,0.05) 4px),
+                radial-gradient(circle at 25% 25%, rgba(68,68,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(68,68,255,0.08) 0%, transparent 50%);
+            animation: patternMove 25s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes patternMove {
+            0% { transform: translateX(0) translateY(0) rotate(0deg); }
+            100% { transform: translateX(-100px) translateY(-100px) rotate(360deg); }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(90deg, rgba(0,17,34,0.95), rgba(26,0,68,0.95), rgba(0,17,34,0.95));
+            border-bottom: 3px solid #4444ff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+            backdrop-filter: blur(15px);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .velvet-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .velvet-icon {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #4444ff, #2222aa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: 1.5rem;
+            animation: velvetPulse 3s ease-in-out infinite;
+            border: 2px solid #6666ff;
+        }
+        
+        @keyframes velvetPulse {
+            0%, 100% { box-shadow: 0 0 15px #4444ff; }
+            50% { box-shadow: 0 0 30px #4444ff, 0 0 45px #6666ff; }
+        }
+        
+        .velvet-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: linear-gradient(45deg, #ffffff, #4444ff, #ffffff, #6666ff);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleShimmer 4s ease-in-out infinite;
+        }
+        
+        @keyframes titleShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 0% 100%; }
+            75% { background-position: 100% 0%; }
+        }
+        
+        .back-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: 2px solid #4444ff;
+            color: #4444ff;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #4444ff;
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        
+        .back-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        
+        .back-btn:hover::before {
+            left: 0;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .page-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 1rem;
+            color: #4444ff;
+            text-shadow: 0 0 20px rgba(68,68,255,0.5);
+        }
+        
+        .page-subtitle {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            color: #8888ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, rgba(68,68,255,0.15), rgba(0,8,17,0.8));
+            border: 2px solid rgba(68,68,255,0.4);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4444ff, transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-10px);
+            border-color: #4444ff;
+            box-shadow: 0 15px 40px rgba(68,68,255,0.3);
+        }
+        
+        .info-card:hover::before {
+            left: 100%;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #4444ff, #6666ff);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 5px 15px rgba(68,68,255,0.3);
+        }
+        
+        .card-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #4444ff;
+            letter-spacing: 1px;
+        }
+        
+        .card-content {
+            color: #ccccff;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+        
+        .card-content strong {
+            color: #ffffff;
+        }
+        
+        .card-content em {
+            color: #8888ff;
+            font-style: italic;
+        }
+        
+        /* Special Feature Card */
+        .feature-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(68,68,255,0.2), rgba(34,34,204,0.1));
+            border: 3px solid #4444ff;
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .feature-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            color: #4444ff;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        
+        .feature-description {
+            font-size: 1.1rem;
+            color: #ccccff;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        
+        /* Floating Orbs */
+        .floating-orb {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(68,68,255,0.3), rgba(68,68,255,0.1));
+            border-radius: 50%;
+            border: 2px solid rgba(68,68,255,0.2);
+            animation: orbFloat 8s ease-in-out infinite;
+        }
+        
+        .floating-orb:nth-child(1) {
+            top: 15%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-orb:nth-child(2) {
+            bottom: 20%;
+            left: 8%;
+            animation-delay: 3s;
+        }
+        
+        .floating-orb:nth-child(3) {
+            top: 50%;
+            right: 5%;
+            animation-delay: 6s;
+        }
+        
+        @keyframes orbFloat {
+            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.3; }
+            33% { transform: translateY(-30px) scale(1.1); opacity: 0.6; }
+            66% { transform: translateY(15px) scale(0.9); opacity: 0.4; }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 2.5rem;
+            }
+            
+            .header {
+                padding: 0 1rem;
+            }
+            
+            .main-content {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="bg-pattern"></div>
+    
+    <!-- Floating Orbs -->
+    <div class="floating-orb"></div>
+    <div class="floating-orb"></div>
+    <div class="floating-orb"></div>
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="velvet-logo">
+                <div class="velvet-icon">V</div>
+                <div class="velvet-title">Velvet Room</div>
+            </div>
+        </div>
+        <button class="back-btn" onclick="goBack()">← Back to Main</button>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Velvet Room Wiki</h1>
+            <p class="page-subtitle">Repository of Forbidden Knowledge</p>
+        </div>
+        
+        <div class="info-grid">
+            <!-- Card 1: What is the Velvet Room -->
+            <div class="info-card">
+                <div class="card-header">
+                    <div class="card-icon">🏛️</div>
+                    <h2 class="card-title">What is the Velvet Room?</h2>
+                </div>
+                <div class="card-content">
+                    The Velvet Room is a <strong>mysterious interdimensional space</strong> that exists between dream and reality, mind and matter. It serves as a sanctuary for those with the <em>Wild Card</em> ability, allowing them to access powers beyond normal comprehension. The room's appearance changes based on the guest's circumstances and mental state, reflecting their journey's current phase.
+                </div>
+            </div>
+            
+            <!-- Card 2: Igor - The Master -->
+            <div class="info-card">
+                <div class="card-header">
+                    <div class="card-icon">👨‍🦲</div>
+                    <h2 class="card-title">Igor - The Master</h2>
+                </div>
+                <div class="card-content">
+                    <strong>Igor</strong> is the enigmatic master of the Velvet Room, a long-nosed man who has served countless guests throughout time. He possesses vast knowledge of Personas and the collective unconscious. Despite his unsettling appearance, Igor is a <em>benevolent guide</em> who helps Wild Card users understand their power and navigate the challenges ahead.
+                </div>
+            </div>
+            
+            <!-- Card 3: Persona Fusion -->
+            <div class="info-card">
+                <div class="card-header">
+                    <div class="card-icon">⚗️</div>
+                    <h2 class="card-title">Persona Fusion</h2>
+                </div>
+                <div class="card-content">
+                    The primary service of the Velvet Room is <strong>Persona Fusion</strong> - the art of combining multiple Personas to create new, more powerful ones. This alchemical process allows Wild Card users to <em>expand their arsenal</em> and adapt to any situation. Advanced fusion techniques can create legendary Personas with devastating abilities.
+                </div>
+            </div>
+            
+            <!-- Card 4: The Attendants -->
+            <div class="info-card">
+                <div class="card-header">
+                    <div class="card-icon">👥</div>
+                    <h2 class="card-title">The Attendants</h2>
+                </div>
+                <div class="card-content">
+                    The Velvet Room attendants are <strong>artificial beings</strong> created by Igor to assist guests. In Persona 5 Royal, the twin wardens <em>Caroline and Justine</em> serve this role, though they initially view the protagonist as a prisoner. These attendants help manage the Persona compendium and provide various services to aid the guest's rehabilitation.
+                </div>
+            </div>
+            
+            <!-- Card 5: The Compendium -->
+            <div class="info-card">
+                <div class="card-header">
+                    <div class="card-icon">📚</div>
+                    <h2 class="card-title">Persona Compendium</h2>
+                </div>
+                <div class="card-content">
+                    The <strong>Persona Compendium</strong> is a mystical registry that records every Persona the Wild Card user has encountered or created. It serves as both a <em>historical record</em> and practical tool, allowing users to resummon previously obtained Personas for a fee. This invaluable resource ensures that no hard-earned power is ever truly lost.
+                </div>
+            </div>
+            
+            <!-- Special Feature Card -->
+            <div class="info-card feature-card">
+                <h2 class="feature-title">🎭 The Velvet Room's True Purpose</h2>
+                <p class="feature-description">
+                    Beyond its practical services, the Velvet Room represents a <strong>space of personal growth and rehabilitation</strong>. It challenges guests to confront their inner selves, overcome psychological barriers, and ultimately achieve their full potential. The room itself evolves with the guest, transforming from prison to limousine to reflect their journey toward freedom and self-actualization.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Custom cursor follow
+        const cursor = document.querySelector('.cursor');
+        let mouseX = 0, mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function updateCursor() {
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            requestAnimationFrame(updateCursor);
+        }
+        updateCursor();
+        
+        // Sound effect simulation
+        function playSound(type) {
+            const cursor = document.querySelector('.cursor');
+            cursor.style.transform = 'scale(1.5)';
+            setTimeout(() => {
+                cursor.style.transform = 'scale(1)';
+            }, 100);
+        }
+        
+        // Back button functionality
+        function goBack() {
+            playSound('back');
+            // You can replace this with actual navigation
+            window.history.back();
+        }
+        
+        // Add hover effects
+        document.querySelectorAll('.info-card, .back-btn').forEach(element => {
+            element.addEventListener('mouseenter', () => playSound('hover'));
+        });
+        
+        // Parallax effect for floating orbs
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.floating-orb');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 0.03;
+                const x = (mouseX - 0.5) * 40 * speed;
+                const y = (mouseY - 0.5) * 40 * speed;
+                orb.style.transform += ` translate(${x}px, ${y}px)`;
+            });
+        });
+        
+        // Card entrance animation
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.info-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(50px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                goBack();
+            }
+        });
+    </script>
+</body>
+</html>
