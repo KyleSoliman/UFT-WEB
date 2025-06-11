@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona 5 Royal - Ultimate Personas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Roboto+Condensed:wght@300;400;700&family=Orbitron:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ff0000, #cc0000);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+
+        /* Background */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a2e 0%, #000000 25%, #1a0033 50%, #000000 75%, #0a0a2e 100%);
+        }
+
+        .bg-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,215,0,0.05) 2px, rgba(255,215,0,0.05) 4px),
+                radial-gradient(circle at 30% 30%, rgba(255,215,0,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(138,43,226,0.08) 0%, transparent 50%);
+            animation: patternShift 25s linear infinite;
+        }
+
+        @keyframes patternShift {
+            0% { transform: translateX(0) translateY(0) rotate(0deg); }
+            100% { transform: translateX(-100px) translateY(-100px) rotate(360deg); }
+        }
+
+        /* Top HUD */
+        .hud-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(26,0,0,0.9), rgba(0,0,0,0.9));
+            border-bottom: 2px solid #ff0000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .hud-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #ff0000, #cc0000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: 1.2rem;
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { box-shadow: 0 0 10px #ff0000; }
+            50% { box-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000; }
+        }
+
+        .logo-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ff0000;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 2px solid #ff0000;
+            color: #ff0000;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #ff0000;
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,0,0,0.3);
+        }
+
+        .back-btn:hover::before {
+            left: 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 60px;
+            padding: 2rem;
+            min-height: calc(100vh - 60px);
+        }
+
+        .page-title {
+            text-align: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #FFD700, #FF6B35, #8A2BE2, #FF1493);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: ultimateGradient 6s ease-in-out infinite;
+        }
+
+        @keyframes ultimateGradient {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 50% 100%; }
+            75% { background-position: 50% 0%; }
+        }
+
+        .personas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .persona-card {
+            background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(138,43,226,0.1), rgba(0,0,0,0.8));
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(15px);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .persona-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #FFD700, #FF6B35, #8A2BE2, #FF1493);
+            border-radius: 15px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .persona-card:hover::before {
+            opacity: 1;
+        }
+
+        .persona-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255,215,0,0.2);
+        }
+
+        .persona-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .persona-avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            position: relative;
+            animation: avatarGlow 3s ease-in-out infinite;
+        }
+
+        .messiah-avatar {
+            background: radial-gradient(circle, #FFD700, #FFA500);
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .izanagi-avatar {
+            background: radial-gradient(circle, #4169E1, #1E90FF);
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .satanael-avatar {
+            background: radial-gradient(circle, #DC143C, #8B0000);
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+            50% { box-shadow: 0 0 30px rgba(255,255,255,0.6), 0 0 40px rgba(255,255,255,0.3); }
+        }
+
+        .persona-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .persona-arcana {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            color: #FFD700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .persona-level {
+            background: rgba(255,0,0,0.2);
+            border: 1px solid #ff0000;
+            border-radius: 20px;
+            padding: 0.25rem 1rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .persona-description {
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .persona-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-group {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .stat-title {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            color: #FFD700;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .persona-skills {
+            margin-top: 2rem;
+        }
+
+        .skills-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #FFD700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .skill-list {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .skill-item {
+            background: rgba(255,0,0,0.1);
+            border: 1px solid rgba(255,0,0,0.3);
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            background: rgba(255,0,0,0.2);
+            border-color: #ff0000;
+            transform: translateX(5px);
+        }
+
+        .skill-name {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .skill-type {
+            color: #FFD700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            animation: float 8s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .personas-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .persona-card {
+                padding: 1.5rem;
+            }
+
+            .persona-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+
+    <div class="bg-container">
+        <div class="bg-pattern"></div>
+    </div>
+
+    <!-- Floating Particles -->
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; animation-delay: 1s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 40%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 80%; animation-delay: 7s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 8s;"></div>
+
+    <!-- Top HUD -->
+    <div class="hud-top">
+        <div class="hud-left">
+            <div class="logo-container">
+                <div class="logo-icon">P5</div>
+                <div class="logo-text">Ultimate Personas</div>
+            </div>
+        </div>
+        <a href="PersonaFive.html" class="back-btn">← Back to Palace</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="page-title">Ultimate Personas</h1>
+
+        <div class="personas-grid">
+            <!-- Messiah -->
+            <div class="persona-card" data-persona="messiah">
+                <div class="persona-header">
+                    <div class="persona-avatar messiah-avatar">☩</div>
+                    <div class="persona-name">Messiah</div>
+                    <div class="persona-arcana">Judgement Arcana</div>
+                    <div class="persona-level">Level 81</div>
+                </div>
+
+                <div class="persona-description">
+                    The ultimate Persona of the Judgement Arcana, representing salvation and redemption. Born from the protagonist's resolve to save humanity, Messiah embodies the power of hope and divine intervention. This Persona can only be obtained through the fusion of Orpheus and Thanatos, symbolizing the union of life and death.
+                </div>
+
+                <div class="persona-stats">
+                    <div class="stat-group">
+                        <div class="stat-title">Base Stats</div>
+                        <div class="stat-item">
+                            <span>Strength</span>
+                            <span class="stat-value">50</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Magic</span>
+                            <span class="stat-value">50</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Endurance</span>
+                            <span class="stat-value">50</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Agility</span>
+                            <span class="stat-value">50</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Luck</span>
+                            <span class="stat-value">50</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-group">
+                        <div class="stat-title">Resistances</div>
+                        <div class="stat-item">
+                            <span>Light</span>
+                            <span class="stat-value">Absorb</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Dark</span>
+                            <span class="stat-value">Absorb</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>All Others</span>
+                            <span class="stat-value">Resist</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="persona-skills">
+                    <div class="skills-title">Signature Skills</div>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span class="skill-name">Megidolaon</span>
+                            <span class="skill-type">Almighty</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Salvation</span>
+                            <span class="skill-type">Healing</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">God's Hand</span>
+                            <span class="skill-type">Physical</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Absorb Phys</span>
+                            <span class="skill-type">Passive</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Izanagi-no-Okami -->
+            <div class="persona-card" data-persona="izanagi">
+                <div class="persona-header">
+                    <div class="persona-avatar izanagi-avatar">⚡</div>
+                    <div class="persona-name">Izanagi-no-Okami</div>
+                    <div class="persona-arcana">World Arcana</div>
+                    <div class="persona-level">Level 91</div>
+                </div>
+
+                <div class="persona-description">
+                    The ultimate form of Izanagi, representing the Japanese creator deity who shaped the world. This Persona embodies the protagonist's journey to seek truth and face reality. With command over lightning and the power to see through all illusions, Izanagi-no-Okami stands as the pinnacle of the World Arcana.
+                </div>
+
+                <div class="persona-stats">
+                    <div class="stat-group">
+                        <div class="stat-title">Base Stats</div>
+                        <div class="stat-item">
+                            <span>Strength</span>
+                            <span class="stat-value">60</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Magic</span>
+                            <span class="stat-value">60</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Endurance</span>
+                            <span class="stat-value">55</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Agility</span>
+                            <span class="stat-value">55</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Luck</span>
+                            <span class="stat-value">55</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-group">
+                        <div class="stat-title">Resistances</div>
+                        <div class="stat-item">
+                            <span>Electric</span>
+                            <span class="stat-value">Absorb</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Light</span>
+                            <span class="stat-value">Resist</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Dark</span>
+                            <span class="stat-value">Resist</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="persona-skills">
+                    <div class="skills-title">Signature Skills</div>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span class="skill-name">Myriad Truths</span>
+                            <span class="skill-type">Almighty</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Thunder Reign</span>
+                            <span class="skill-type">Electric</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Victory Cry</span>
+                            <span class="skill-type">Passive</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Concentrate</span>
+                            <span class="skill-type">Support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Satanael -->
+            <div class="persona-card" data-persona="satanael">
+                <div class="persona-header">
+                    <div class="persona-avatar satanael-avatar">😈</div>
+                    <div class="persona-name">Satanael</div>
+                    <div class="persona-arcana">Fool Arcana</div>
+                    <div class="persona-level">Level 95</div>
+                </div>
+
+                <div class="persona-description">
+                    The ultimate Persona of the Fool Arcana, representing rebellion against false gods and corrupt authority. Born from Joker's unwavering resolve to defy fate itself, Satanael wields the power to destroy lies and bring justice to the world. This demon lord serves as the perfect embodiment of the Phantom Thieves' mission.
+                </div>
+
+                <div class="persona-stats">
+                    <div class="stat-group">
+                        <div class="stat-title">Base Stats</div>
+                        <div class="stat-item">
+                            <span>Strength</span>
+                            <span class="stat-value">65</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Magic</span>
+                            <span class="stat-value">65</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Endurance</span>
+                            <span class="stat-value">60</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Agility</span>
+                            <span class="stat-value">60</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Luck</span>
+                            <span class="stat-value">60</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-group">
+                        <div class="stat-title">Resistances</div>
+                        <div class="stat-item">
+                            <span>Gun</span>
+                            <span class="stat-value">Absorb</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Curse</span>
+                            <span class="stat-value">Absorb</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Ice</span>
+                            <span class="stat-value">Resist</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Bless</span>
+                            <span class="stat-value">Weak</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="persona-skills">
+                    <div class="skills-title">Signature Skills</div>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span class="skill-name">Sinful Shell</span>
+                            <span class="skill-type">Gun</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Megidolaon</span>
+                            <span class="skill-type">Almighty</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Survival Trick</span>
+                            <span class="skill-type">Passive</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Tyrant's Mind</span>
+                            <span class="skill-type">Passive</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Custom cursor follow
+        const cursor = document.querySelector('.cursor');
+        let mouseX = 0, mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function updateCursor() {
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            requestAnimationFrame(updateCursor);
+        }
+        updateCursor();
+
+        // Interactive sound effects simulation
+        function playSound(type) {
+            const cursor = document.querySelector('.cursor');
+            cursor.style.transform = 'scale(1.5)';
+            setTimeout(() => {
+                cursor.style.transform = 'scale(1)';
+            }, 100);
+        }
+
+        // Persona card interactions
+        document.querySelectorAll('.persona-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                playSound('hover');
+                card.style.animation = 'none';
+                setTimeout(() => {
+                    card.style.animation = '';
+                }, 10);
+            });
+
+            card.addEventListener('click', () => {
+                playSound('select');
+                const personaName = card.querySelector('.persona-name').textContent;
+                showPersonaModal(personaName);
+            });
+        });
+
+        // Skill hover effects
+        document.querySelectorAll('.skill-item').forEach(skill => {
+            skill.addEventListener('mouseenter', () => playSound('hover'));
+        });
+
+        // Screen flash effect for dramatic moments
+        function screenFlash(color = '#FFD700') {
+            const flash = document.createElement('div');
+            flash.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: ${color};
+                opacity: 0.2;
+                z-index: 9998;
+                pointer-events: none;
+                animation: flashFade 0.4s ease-out;
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes flashFade {
+                    0% { opacity: 0.2; }
+                    50% { opacity: 0.4; }
+                    100% { opacity: 0; }
+                }
+            `;
+            body.appendChild(flash);
+
+setTimeout(() => {
+    document.body.removeChild(flash);
+    document.head.removeChild(style);
+}, 400);
+}
+
+// Modal system for persona details
+function showPersonaModal(personaName) {
+screenFlash('#ff0000');
+
+const modal = document.createElement('div');
+modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(10px);
+`;
+
+const modalContent = document.createElement('div');
+modalContent.style.cssText = `
+    background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(138,43,226,0.1));
+    border: 2px solid #ff0000;
+    border-radius: 15px;
+    padding: 2rem;
+    max-width: 500px;
+    text-align: center;
+    color: white;
+`;
+
+modalContent.innerHTML = `
+    <h2 style="font-family: 'Oswald', sans-serif; font-size: 2rem; margin-bottom: 1rem; color: #FFD700;">${personaName}</h2>
+    <p style="margin-bottom: 2rem; line-height: 1.6;">You have awakened to the power of ${personaName}! This ultimate Persona represents the pinnacle of your journey and the strength of your bonds.</p>
+    <button id="closeModal" style="
+        padding: 10px 20px;
+        background: #ff0000;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-family: 'Oswald', sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        text-transform: uppercase;
+    ">Close</button>
+`;
+
+modal.appendChild(modalContent);
+document.body.appendChild(modal);
+
+document.getElementById('closeModal').addEventListener('click', () => {
+    document.body.removeChild(modal);
+});
+
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        document.body.removeChild(modal);
+    }
+});
+}
+
+// Dynamic particle generation
+function createParticle() {
+const particle = document.createElement('div');
+particle.className = 'particle';
+particle.style.left = Math.random() * 100 + '%';
+particle.style.animationDelay = Math.random() * 8 + 's';
+particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+
+const colors = ['#FFD700', '#FF6B35', '#8A2BE2', '#FF1493'];
+particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+document.body.appendChild(particle);
+
+setTimeout(() => {
+    if (document.body.contains(particle)) {
+        document.body.removeChild(particle);
+    }
+}, 12000);
+}
+
+// Generate particles periodically
+setInterval(createParticle, 2000);
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+switch(e.key.toLowerCase()) {
+    case 'escape':
+        const modal = document.querySelector('[style*="z-index: 10000"]');
+        if (modal) document.body.removeChild(modal);
+        break;
+    case '1':
+        document.querySelector('[data-persona="messiah"]').click();
+        break;
+    case '2':
+        document.querySelector('[data-persona="izanagi"]').click();
+        break;
+    case '3':
+        document.querySelector('[data-persona="satanael"]').click();
+        break;
+}
+});
+
+// Loading animation on page load
+window.addEventListener('load', () => {
+screenFlash('#FFD700');
+
+const cards = document.querySelectorAll('.persona-card');
+cards.forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(50px)';
+    
+    setTimeout(() => {
+        card.style.transition = 'all 0.8s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+    }, index * 200);
+});
+});
+
+// Background music visualization (visual only)
+function createMusicVisualization() {
+const visualization = document.createElement('div');
+visualization.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    align-items: end;
+    gap: 2px;
+    z-index: 50;
+`;
+
+for (let i = 0; i < 10; i++) {
+    const bar = document.createElement('div');
+    bar.style.cssText = `
+        width: 3px;
+        background: linear-gradient(to top, #ff0000, #FFD700);
+        border-radius: 2px;
+        animation: musicBar ${0.5 + Math.random()}s ease-in-out infinite alternate;
+    `;
+    visualization.appendChild(bar);
+}
+
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes musicBar {
+        0% { height: 5px; opacity: 0.3; }
+        100% { height: ${10 + Math.random() * 30}px; opacity: 1; }
+    }
+`;
+document.head.appendChild(style);
+document.body.appendChild(visualization);
+}
+
+createMusicVisualization();
+
+// Add subtle screen shake on dramatic moments
+function screenShake(duration = 500) {
+document.body.style.animation = `shake ${duration}ms ease-in-out`;
+
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+        20%, 40%, 60%, 80% { transform: translateX(2px); }
+    }
+`;
+document.head.appendChild(shakeStyle);
+
+setTimeout(() => {
+    document.body.style.animation = '';
+    document.head.removeChild(shakeStyle);
+}, duration);
+}
+
+// Add screen shake to card clicks
+document.querySelectorAll('.persona-card').forEach(card => {
+card.addEventListener('click', () => {
+    screenShake(300);
+});
+});
+</script>
+</body>
+</html>
