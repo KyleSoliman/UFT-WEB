@@ -1,0 +1,1631 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona 5 Design</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Roboto+Condensed:wght@300;400;700&family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+            padding: 2rem;
+        }
+        
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ff0000, #cc0000);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+        
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .bg-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0000 0%, #000000 25%, #330000 50%, #000000 75%, #1a0000 100%);
+        }
+        
+        .bg-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,0,0,0.05) 2px, rgba(255,0,0,0.05) 4px),
+                radial-gradient(circle at 25% 25%, rgba(255,0,0,0.1) 0%, transparent 50%);
+            animation: patternMove 20s linear infinite;
+        }
+        
+        @keyframes patternMove {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-100px) translateY(-100px); }
+        }
+        
+        .hud-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.95), rgba(26,0,0,0.95), rgba(0,0,0,0.95));
+            border-bottom: 2px solid #ff0000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ff0000;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover {
+            color: #fff;
+            transform: translateX(-5px);
+        }
+        
+        .page-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ff0000;
+        }
+        
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .main-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: linear-gradient(45deg, #ffffff, #ff0000, #ffffff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleShine 3s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes titleShine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .card-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(0,0,0,0.9));
+            border: 2px solid rgba(255,0,0,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            min-height: 200px;
+            width: 100%;
+            max-width: 1400px;;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,0,0,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: #ff0000;
+            box-shadow: 0 20px 40px rgba(255,0,0,0.2);
+        }
+        
+        .card:hover::before {
+            left: 100%;
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,0,0,0.3);
+            position: relative;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ff0000, transparent);
+        }
+        
+        .card-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            background: rgba(255,0,0,0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,0,0,0.3);
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-number::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .card:hover .card-number::before {
+            left: 100%;
+        }
+        
+        .card-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff0000, transparent);
+            border-radius: 2px;
+        }
+        
+        .card-content {
+            padding: 2rem;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .detail-item {
+            background: rgba(255,0,0,0.1);
+            border: 1px solid rgba(255,0,0,0.2);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+        
+        .detail-label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-value {
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(255,0,0,0.15), rgba(0,0,0,0.8));
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .info-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            color: #ff0000;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        
+        .game-info {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            text-align: left;
+        }
+        
+        .game-image {
+            flex: 0 0 200px;
+            width: 200px;
+            height: 300px;
+        }
+        
+        .game-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #ff0000;
+        }
+        
+        .game-text {
+            flex: 1;
+            color: #ccc;
+            line-height: 1.7;
+        }
+        
+        .game-text p {
+            margin-bottom: 1rem;
+        }
+        
+        .platform-logo {
+            height: 40px;
+            width: auto;
+            max-width: 80px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+            filter: brightness(0.8);
+            background-color: #ff0000;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        
+        .platform-logo:hover {
+            transform: scale(1.1);
+            filter: brightness(1);
+        }
+        
+        @media (max-width: 768px) {
+            .game-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .game-image {
+                flex: none;
+                width: 150px;
+                height: 225px;
+                margin: 0 auto;
+            }
+            
+            .platform-logos {
+                justify-content: center;
+            }
+            
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .action-btn {
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255,0,0,0.3);
+            background: linear-gradient(45deg, #cc0000, #ff0000);
+        }
+        
+        .side-panel {
+            position: fixed;
+            right: -300px;
+            top: 60px;
+            width: 280px;
+            height: calc(100vh - 60px);
+            background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(26,0,0,0.95));
+            border-left: 2px solid #ff0000;
+            transition: right 0.4s ease;
+            z-index: 200;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .side-panel.active {
+            right: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+        }
+        
+        .card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+        .card:nth-child(6) { animation-delay: 0.6s; }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ff0000;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            color: #fff;
+            transform: translateX(-5px);
+        }
+
+        .detail-item.video-item {
+            padding: 0;
+            background: transparent;
+            border: none;
+            min-width: 300px;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #ff0000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .info-grid {
+            width: 100%;
+            border-collapse: collapse;
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(26,0,0,0.8));
+            border: 2px solid #ff0000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .info-grid th {
+            background: linear-gradient(90deg, #ff0000, #cc0000);
+            color: #fff;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #ff0000;
+            position: relative;
+        }
+
+        .info-grid th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        .info-grid td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,0,0,0.3);
+            color: #fff;
+            font-family: 'Roboto Condensed', sans-serif;
+            vertical-align: middle;
+        }
+
+        .info-grid tr:nth-child(even) {
+            background: rgba(255,0,0,0.05);
+        }
+
+        .info-grid tr:hover {
+            background: rgba(255,0,0,0.1);
+            transform: translateX(5px);
+            transition: all 0.3s ease;
+        }
+
+        .table-platform-logo {
+            height: 30px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            filter: brightness(1.1);
+            background-color: rgba(255,0,0,0.8);
+            padding: 3px;
+            border-radius: 3px;
+        }
+
+        .status-available {
+            color: #00ff00;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-offsale {
+            color: #ff6666;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-limited {
+            color: #ffaa00;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .development-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .development-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #ff0000, #cc0000, #ff0000);
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .timeline-year {
+            position: relative;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(255,0,0,0.08), rgba(0,0,0,0.6));
+            border: 1px solid rgba(255,0,0,0.3);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-year::before {
+            content: '';
+            position: absolute;
+            left: -2.75rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, #ff0000, #cc0000);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+            z-index: 2;
+        }
+
+        .timeline-year:hover {
+            transform: translateX(10px);
+            border-color: #ff0000;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
+        }
+
+        .timeline-year h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .timeline-year h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #ff0000, transparent);
+        }
+
+        .timeline-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .timeline-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255,0,0,0.1);
+            color: #ccc;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .timeline-list li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #ff0000;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .timeline-list li:hover {
+            color: #fff;
+            transform: translateX(5px);
+            background: rgba(255,0,0,0.05);
+            border-radius: 4px;
+            padding-left: 1.2rem;
+        }
+
+        .timeline-list li:hover::before {
+            opacity: 1;
+            color: #fff;
+        }
+
+        .timeline-list li:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-date {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            color: #ff0000;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-right: 0.5rem;
+            display: inline-block;
+            min-width: 120px;
+            background: rgba(255,0,0,0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255,0,0,0.3);
+        }
+
+        .timeline-year {
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInTimeline 0.8s ease forwards;
+        }
+
+        .timeline-year:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-year:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-year:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-year:nth-child(4) { animation-delay: 0.4s; }
+        .timeline-year:nth-child(5) { animation-delay: 0.5s; }
+        .timeline-year:nth-child(6) { animation-delay: 0.6s; }
+        .timeline-year:nth-child(7) { animation-delay: 0.7s; }
+
+        @keyframes slideInTimeline {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .development-timeline {
+                padding-left: 1rem;
+            }
+
+            .timeline-year::before {
+                left: -1.75rem;
+            }
+
+            .timeline-date {
+                display: block;
+                margin-bottom: 0.5rem;
+                min-width: auto;
+            }
+
+            .timeline-list li {
+                padding-left: 0;
+            }
+
+            .timeline-list li::before {
+                display: none;
+            }
+        }
+
+        .credits-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        .credits-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .credits-container::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+
+        .credits-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ff0000, #cc0000);
+            border-radius: 4px;
+        }
+
+        .credits-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #cc0000, #ff0000);
+        }
+
+        .credits-section {
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .credits-category {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(255,0,0,0.3);
+            position: relative;
+        }
+
+        .credits-category::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #ff0000, transparent);
+        }
+
+        .credits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .credit-item {
+            background: linear-gradient(135deg, rgba(255,0,0,0.08), rgba(0,0,0,0.4));
+            border: 1px solid rgba(255,0,0,0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .credit-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,0,0,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .credit-item:hover {
+            transform: translateY(-3px);
+            border-color: #ff0000;
+            box-shadow: 0 8px 20px rgba(255,0,0,0.15);
+        }
+
+        .credit-item:hover::before {
+            left: 100%;
+        }
+
+        .credit-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .credit-role {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 0.9rem;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 400;
+        }
+
+        .credits-voice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .voice-item {
+            background: linear-gradient(90deg, rgba(255,0,0,0.1), rgba(0,0,0,0.3));
+            border-left: 3px solid #ff0000;
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .voice-item:hover {
+            background: linear-gradient(90deg, rgba(255,0,0,0.15), rgba(0,0,0,0.5));
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(255,0,0,0.1);
+        }
+
+        .voice-actor {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .voice-character {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 0.9rem;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: right;
+        }
+
+        .credits-section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInCredits 0.8s ease forwards;
+        }
+
+        .credits-section:nth-child(1) { animation-delay: 0.1s; }
+        .credits-section:nth-child(2) { animation-delay: 0.2s; }
+        .credits-section:nth-child(3) { animation-delay: 0.3s; }
+        .credits-section:nth-child(4) { animation-delay: 0.4s; }
+        .credits-section:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes fadeInCredits {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .credits-grid {
+                grid-template-columns: 1fr;
+            }
+    
+            .credits-voice-grid {
+                grid-template-columns: 1fr;
+            }
+    
+            .voice-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
+    
+            .voice-character {
+                text-align: left;
+            }
+    
+            .credits-container {
+                max-height: 500px;
+            }
+        }
+
+        .sources-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .source-item {
+            background: linear-gradient(90deg, rgba(255,0,0,0.08), rgba(0,0,0,0.4));
+            border: 1px solid rgba(255,0,0,0.2);
+            border-left: 4px solid #ff0000;
+            border-radius: 0 8px 8px 0;
+            padding: 1.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .source-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,0,0,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .source-item:hover {
+            transform: translateX(10px);
+            border-color: #ff0000;
+            border-left-color: #fff;
+            box-shadow: 0 10px 25px rgba(255,0,0,0.15);
+            background: linear-gradient(90deg, rgba(255,0,0,0.12), rgba(0,0,0,0.6));
+        }
+
+        .source-item:hover::before {
+            left: 100%;
+        }
+        
+        .source-link {
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .source-link::before {
+            content: '→';
+            font-size: 1.5rem;
+            color: #ff0000;
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+
+        .source-link:hover {
+            color: #ff0000;
+        }
+        
+        .source-link:hover::before {
+            transform: translateX(10px);
+            color: #fff;
+        }
+        
+        .source-description {
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(255,0,0,0.2);
+            color: #ccc;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .source-type {
+            display: inline-block;
+            background: rgba(255,0,0,0.2);
+            color: #ff0000;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,0,0,0.4);
+            margin-bottom: 0.5rem;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .card-title {
+                font-size: 1.5rem;
+            }
+            
+            .card-content {
+                padding: 1.5rem;
+            }
+            
+            .source-item:hover {
+                transform: translateX(5px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    
+    <div class="bg-container">
+        <div class="bg-layer"></div>
+        <div class="bg-pattern"></div>
+    </div>
+    
+    <div class="hud-top">
+        <a href="javascript:history.back()" class="back-btn">
+            ← Back to Menu
+        </a>
+        <div class="page-title">Information Database</div>
+        <div style="width: 120px;"></div>
+    </div>
+    
+    <div class="side-panel">
+        <div class="info-title"></div>
+    </div>
+    
+    <div class="main-content">
+        <div class="header-section">
+            <h1 class="main-title">Game Information</h1>
+        </div>
+        
+        <div class="card-grid">
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-number">GAME INFO</div>
+                    <div class="card-title">About the Game</div>
+                </div>
+                <div class="card-content">
+                    <div class="game-info">
+                        <div class="game-image">
+                            <img src="Persona5ArtCover1000x1500.jpg" al
+                            t="Persona 5" style="width: 100%; height: auto; border-radius: 8px; border: 2px solid #ff0000;">
+                            </div>
+                        <div class="game-text">
+                            <p>Persona 5 is the sixth installment in the Persona series, initially released for PlayStation 3 and PlayStation 4 in Japan on September 15, 2016.</p>
+                            <p>The game takes place in modern-day Tokyo, starring Joker, the codename of a high school student who transfers to a new school while he is on probation after being framed for assault.</p>
+                            <p>Persona 5 (including Royal) sold over 7.2 million copies by April 2023, making it the best-selling title in the Megami Tensei franchise.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-number">SYSTEM 01</div>
+                    <div class="card-title">Plot</div>
+                </div>
+                <div class="card-content">
+                    <div class="game-text">
+                        <p>The story is told through flashbacks during Sae Niijima's interrogation of the protagonist. After being framed for assault, the protagonist is put on probation and sent to Tokyo to stay with family friend Sojiro Sakura while attending Shujin Academy.</p>
+                        <p>Upon arrival, he enters the Velvet Room where Igor and his assistants Caroline and Justine warn him of future ruin and grant him access to a supernatural app. This leads him into the Metaverse and the Palace of corrupt gym teacher Suguru Kamoshida, alongside fellow student Ryuji Sakamoto.</p>
+                        <p>After being captured by Kamoshida's Shadow Self, the protagonist awakens his Persona Arsène to save Ryuji. They escape and meet Morgana, a cat-like creature who explains how to change wicked hearts by stealing their "Treasure" from Palaces. Learning of Kamoshida's abuse, Ryuji also awakens his Persona.</p>
+                        <p>The group confronts Ann Takamaki, who was forced into a relationship with Kamoshida to protect her friend Shiho Suzui. When Shiho attempts suicide after being assaulted, the group decides to steal Kamoshida's heart. Ann awakens her Persona after accidentally entering the Metaverse.</p>
+                        <p>The protagonist takes the codename Joker and forms the Phantom Thieves of Hearts with Morgana, Ryuji, and Ann. They recruit additional members: Yusuke Kitagawa (artist), Makoto Niijima (student council president), Futaba Sakura (hacker whose mother was murdered by the conspiracy), and Haru Okumura (corporate heiress rebelling against her father).</p>
+                        <p>The Phantom Thieves' popularity plummets after a masked assassin frames them for Haru's father's death. Goro Akechi joins the group and convinces them to change Sae's heart. After infiltrating Sae's Palace, Joker is captured and interrogated, bringing the story full-circle.</p>
+                        <p>Akechi is revealed as the assassin and attempts to kill Joker, but the Phantom Thieves fake his death using the Metaverse. They discover the conspiracy's leader is politician Masayoshi Shido, who framed Joker and has been using Akechi's abilities to eliminate obstacles on his path to becoming Prime Minister.</p>
+                        <p>During Shido's Palace infiltration, Akechi reveals himself as Shido's illegitimate son seeking revenge. After being defeated, Akechi sacrifices himself to protect the Phantom Thieves. Despite Shido's arrest, public opinion remains unchanged due to manipulation by his allies.</p>
+                        <p>The Phantom Thieves enter Mementos' depths to change the public's hearts but discover people have chosen to give up their autonomy. They're ejected by the Holy Grail as the Metaverse merges with reality, causing them to vanish.</p>
+                        <p>In the Velvet Room, the false Igor is revealed to be Yaldabaoth, the God of Control created from humanity's wish to be free from suffering. Caroline and Justine regain their memories and become Lavenza, revealing Yaldabaoth imprisoned the real Igor and manipulated both Joker and Akechi through a wager about humanity's goals.</p>
+                        <p>Yaldabaoth offers to restore the world at the cost of freedom. If Joker accepts, an alternate ending occurs where the Phantom Thieves gain fame but humanity loses free will. If rejected, Joker reunites with his team, and with his confidants' support, the people rebel against Yaldabaoth's control.</p>
+                        <p>Joker awakens his ultimate Persona, Satanael, to destroy Yaldabaoth and the Metaverse. After the victory, Joker turns himself in so Shido can be prosecuted. While incarcerated, his friends gather evidence proving his innocence, leading to his conviction being overturned. By spring, his friends drive him back to his hometown.</p>
+                        <p>(Excluding the plot of Royal)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-number">SYSTEM 02</div>
+                    <div class="card-title">Development</div>
+                </div>
+                <div class="card-content">
+                    <div class="game-text">
+                        <div class="development-timeline">
+                            <div class="timeline-year">
+                                <h3>2008-2010</h3>
+                                <ul class="timeline-list">
+                                    <li><span class="timeline-date">July 2008</span> - Persona 5 starts conceptual development, after Persona 4 is released in Japan.</li>
+                                    <li><span class="timeline-date">July 2, 2009</span> - Persona 5 is accidentally leaked on pachinko gaming website 7-Rush before it was quickly removed.</li>
+                                    <li><span class="timeline-date">March 24, 2010</span> - Hashino confirms in Dengeki PlayStation that the next numbered title of the Persona series is in development, saying that he wants to add in stuff "that fans wouldn't expect".</li>
+                                </ul>
+                            </div>
+
+                            <div class="timeline-year">
+                                <h3>2011</h3>
+                                <ul class="timeline-list">
+                                    <li><span class="timeline-date">February 2</span> - "Preliminary development" begins on the next Persona entry after the release of Catherine, using a new engine rather than GameByro.</li>
+                                    <li><span class="timeline-date">March 11</span> - The initial idea gets completely reworked due to the 2011 Tohoku Earthquake.</li>
+                                    <li><span class="timeline-date">August 31</span> - Preliminary development of the new Persona game "nears completion" in the August issue of Famitsu.</li>
+                                </ul>
+                            </div>
+
+                            <div class="timeline-year">
+                                <h3>2012</h3>
+                                <ul class="timeline-list">
+                                    <li><span class="timeline-date">August 8</span> - Hashino says in Famitsu that the developmental team is focused on creating the new entry in the series.</li>
+                                </ul>
+                            </div>
+
+                            <div class="timeline-year">
+                                <h3>2013</h3>
+                                <ul class="timeline-list">
+                                    <li><span class="timeline-date">June 25</span> - The domain name for the website "persona5.jp" is registered by Atlus.</li>
+                                    <li><span class="timeline-date">September 26</span> - A countdown on p-ch.jp was posted, where it said that "a new title" would be announced.</li>
+                                    <li><span class="timeline-date">November 24</span> - Persona 5 is officially revealed by Atlus, where the game is confirmed to be coming to the PlayStation 3 in Winter 2014.</li>
+                                </ul>
+                            </div>
+
+                            <div class="timeline-year">
+                                <h3>2014</h3>
+                                <ul class="timeline-list">
+                                    <li><span class="timeline-date">February 24</span> - Atlus confirms that Persona 5 is coming to the west, with an English release date of "2015".</li>
+                                    <li><span class="timeline-date">September</span> - A teaser trailer was posted, where the game was confirmed to be coming to the PlayStation 4, while its release date was moved to "2015".</li>
+                                </ul>
+                            </div>
+
+                            <div class="timeline-year">
+                                <h3>2015</h3>
+                                <ul class="timeline-list">
+                                    <li><span class="timeline-date">Feb. 5</span> - PV 01 trailer was released, showing off the gameplay.</li>
+                                    <li><span class="timeline-date">June 24</span> - At E3 2015, Persona 5 was confirmed to still be coming in 2015 in English.</li>
+                                    <li><span class="timeline-date">September 17-19</span> - Persona 5 was shown off at Tokyo Game Show 2015, revealing that the game was delayed to "Summer 2016". A new trailer was released.</li>
+                                    <li><span class="timeline-date">December 5</span> - Date of the December build.</li>
+                                </ul>
+                            </div>
+
+                            <div class="timeline-year">
+                                <h3>2016</h3>
+                                <ul class="timeline-list">
+                                    <li><span class="timeline-date">February 25</span> - Build date of the debug prototype.</li>
+                                    <li><span class="timeline-date">April 22</span> - Atlus announces a countdown on April 22, where it would end with a livestream on May 5, 2016.</li>
+                                    <li><span class="timeline-date">May</span> - Persona 5 finishes development.</li>
+                                    <li><span class="timeline-date">September 15</span> - Persona 5 is officially released in Japan.</li>
+                                </ul>
+                            </div>
+
+                            <div class="timeline-year">
+                                <h3>2017</h3>
+                                <ul class="timeline-list">
+                                    <li><span class="timeline-date">April 4</span> - Persona 5 is officially released in America and Europe.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-number">SYSTEM 03</div>
+                    <div class="card-title">Credits</div>
+                </div>
+                <div class="card-content">
+                    <div class="credits-container">
+
+                        <div class="credits-section">
+                            <h3 class="credits-category">Development Team</h3>
+                            <div class="credits-grid">
+                                <div class="credit-item">
+                                    <span class="credit-name">Katsura Hashino</span>
+                                    <span class="credit-role">Director, Producer</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Shigenori Soejima</span>
+                                    <span class="credit-role">Artist</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Shoji Meguro</span>
+                                    <span class="credit-role">Composer</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Masayoshi Suto</span>
+                                    <span class="credit-role">Artist</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Shinji Yamamoto</span>
+                                    <span class="credit-role">Writer</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="credits-section">
+                            <h3 class="credits-category">Localization Team</h3>
+                            <div class="credits-grid">
+                                <div class="credit-item">
+                                    <span class="credit-name">Valerie Arem</span>
+                                    <span class="credit-role">English Voice Director</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Yu Namba</span>
+                                    <span class="credit-role">Localization Project Lead</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Allie Doyon</span>
+                                    <span class="credit-role">Localization Editor</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Chris Holzworth</span>
+                                    <span class="credit-role">Localization Editor</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Cianar Cabos</span>
+                                    <span class="credit-role">Localization Editor</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Jamie Ortiz</span>
+                                    <span class="credit-role">Localization Editor</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="credits-section">
+                            <h3 class="credits-category">Translation Team</h3>
+                            <div class="credits-grid">
+                                <div class="credit-item">
+                                    <span class="credit-name">Damian Mougakos</span>
+                                    <span class="credit-role">Translator</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Dan Sunstrum</span>
+                                    <span class="credit-role">Translator</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">James Kuroki</span>
+                                    <span class="credit-role">Translator</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Madoka Ueno</span>
+                                    <span class="credit-role">Translator</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Mai Namba</span>
+                                    <span class="credit-role">Translator</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span class="credit-name">Minoru Iwasaki</span>
+                                    <span class="credit-role">Translator</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="credits-section">
+                            <h3 class="credits-category">English Voice Cast</h3>
+                            <div class="credits-voice-grid">
+                                <div class="voice-item">
+                                    <span class="voice-actor">Xander Mobus</span>
+                                    <span class="voice-character">Protagonist</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Max Mittelman</span>
+                                    <span class="voice-character">Ryuji Sakamoto</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Erika Harlacher</span>
+                                    <span class="voice-character">Ann Takamaki</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Matthew Mercer</span>
+                                    <span class="voice-character">Yusuke Kitagawa</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Cherami Leigh</span>
+                                    <span class="voice-character">Makoto Niijima</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Erica Lindbeck</span>
+                                    <span class="voice-character">Futaba Sakura</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Xanthe Huynh</span>
+                                    <span class="voice-character">Haru Okumura</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Robbie Daymond</span>
+                                    <span class="voice-character">Goro Akechi</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Cassandra Lee Morris</span>
+                                    <span class="voice-character">Morgana</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">David Lodge</span>
+                                    <span class="voice-character">Igor</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Jamieson Price</span>
+                                    <span class="voice-character">Sojiro Sakura</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Elizabeth Maxwell</span>
+                                    <span class="voice-character">Sae Niijima</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="credits-section">
+                            <h3 class="credits-category">Japanese Voice Cast</h3>
+                            <div class="credits-voice-grid">
+                                <div class="voice-item">
+                                    <span class="voice-actor">Jun Fukuyama</span>
+                                    <span class="voice-character">Protagonist</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Mamoru Miyano</span>
+                                    <span class="voice-character">Ryuji Sakamoto</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Nana Mizuki</span>
+                                    <span class="voice-character">Ann Takamaki</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Tomokazu Sugita</span>
+                                    <span class="voice-character">Yusuke Kitagawa</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Rina Sato</span>
+                                    <span class="voice-character">Makoto Niijima</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Aoi Yuki</span>
+                                    <span class="voice-character">Futaba Sakura</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Haruka Tomatsu</span>
+                                    <span class="voice-character">Haru Okumura</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Soichiro Hoshi</span>
+                                    <span class="voice-character">Goro Akechi</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Ikue Otani</span>
+                                    <span class="voice-character">Morgana</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Masane Tsukayama</span>
+                                    <span class="voice-character">Igor</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Joji Nakata</span>
+                                    <span class="voice-character">Sojiro Sakura</span>
+                                </div>
+                                <div class="voice-item">
+                                    <span class="voice-actor">Yuko Kaida</span>
+                                    <span class="voice-character">Sae Niijima</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-number">SYSTEM 04</div>
+                    <div class="card-title">Available Platforms</div>
+                </div>
+                <div class="card-content">
+                    <table class="info-grid">
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>Release Date</th>
+                                <th>Sale Status</th>
+                                <th>Price Range</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><img src="Playstation3Logo.png" alt="PlayStation 3" class="table-platform-logo"></td>
+                                <td>September 15, 2016 (Japan)<br>April 4, 2017 (Worldwide)</td>
+                                <td><span class="status-offsale">Offsale</span></td>
+                                <td>$19.99 - $29.99</td>
+                            </tr>
+                            <tr>
+                                <td><img src="Playstation4Logo.png" alt="PlayStation 4" class="table-platform-logo"></td>
+                                <td>September 15, 2016 (Japan)<br>April 4, 2017 (Worldwide)</td>
+                                <td><span class="status-available">Available</span></td>
+                                <td>$19.99 - $39.99</td>
+                            </tr>
+                            <tr>
+                                <td><img src="Playstation5Logo.png" alt="PlayStation 5" class="table-platform-logo"></td>
+                                <td>October 31, 2019</td>
+                                <td><span class="status-available">Available</span></td>
+                                <td>$59.99</td>
+                            </tr>
+                            <tr>
+                                <td><img src="NintendoSwitchLogo.png" alt="Nintendo Switch" class="table-platform-logo"></td>
+                                <td>October 31, 2019</td>
+                                <td><span class="status-available">Available</span></td>
+                                <td>$59.99</td>
+                            </tr>
+                            <tr>
+                                <td><img src="SteamLogo.png" alt="Steam" class="table-platform-logo"></td>
+                                <td>October 23, 2020</td>
+                                <td><span class="status-available">Available</span></td>
+                                <td>$59.99</td>
+                            </tr>
+                            <tr>
+                                <td><img src="XboxOneLogo.png" alt="Xbox One" class="table-platform-logo"></td>
+                                <td>January 25, 2023</td>
+                                <td><span class="status-limited">Game Pass</span></td>
+                                <td>$59.99 / Included</td>
+                            </tr>
+                            <tr>
+                                <td><img src="XboxSeriesXSLogo.png" alt="Xbox Series X|S" class="table-platform-logo"></td>
+                                <td>January 25, 2023</td>
+                                <td><span class="status-limited">Game Pass</span></td>
+                                <td>$59.99 / Included</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-number">SYSTEM 05</div>
+                    <div class="card-title">Videos</div>
+                </div>
+                <div class="card-content">
+                    <div class="detail-grid">
+                        <div class="detail-item video-item">
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/gGXpOFD0SDs?si=obYwL0A1YfZdLbLA" title="Persona 5 Official Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="detail-item video-item">
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/vjSHjAoQty4?si=LfoSjw2dpG9nD0Ff" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="detail-item video-item">
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/0jm8nnHqx80?si=L1WdIT3B3I36MYNV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="detail-item video-item">
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/L_PXUAL4zHQ?si=YPQOaAyEB_0UzZaQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-number">SYSTEM 06</div>
+                    <div class="card-title">Sources</div>
+                </div>
+                <div class="card-content">
+                    <div class="sources-grid">
+                        <div class="source-item">
+                            <div class="source-type">Encyclopedia</div>
+                            <a href="https://en.wikipedia.org/wiki/Persona_5" class="source-link" target="_blank">Wikipedia - Persona 5</a>
+                            <div class="source-description">Comprehensive encyclopedia entry covering the game's development, story, characters, and reception.</div>
+                        </div>
+                        <div class="source-item">
+                            <div class="source-type">Development</div>
+                            <a href="https://tcrf.net/Prerelease:Persona_5" class="source-link" target="_blank">The Cutting Room Floor - Prerelease: Persona 5</a>
+                            <div class="source-description">Detailed analysis of pre-release content, unused assets, and development history from beta versions.</div>
+                            </div>
+                            <div class="source-item">
+                                <div class="source-type">Credits</div>
+                                <a href="https://gamefaqs.gamespot.com/ps4/835628-persona-5/credit" class="source-link" target="_blank">GameFAQs - Persona 5: Credits</a>
+                                <div class="source-description">Complete development team credits including voice cast, staff roles, and production information.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div class="card-number">PHANTOM THIEVES</div>
+                <div class="card-title">Looking Cool, Joker!</div>
+            </div>
+            <div class="card-content">
+                <p style="color: #ccc; line-height: 1.7;">
+                    Experience the award-winning RPG that redefined the genre. Live a year as a Japanese high school student, form powerful friendships, and fight for justice in the mysterious Metaverse. Your choices will determine the fate of Tokyo itself.
+                </p>
+            </div>
+        </div>
+        
+    </div>
+    
+    <script>
+        // Custom cursor follow
+        const cursor = document.querySelector('.cursor');
+        let mouseX = 0, mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            const cursor = document.querySelector('.cursor');
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Cursor scale on hover
+        document.querySelectorAll('a, .source-item').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                document.querySelector('.cursor').style.transform = 'scale(1.5)';
+            });
+            item.addEventListener('mouseleave', () => {
+                document.querySelector('.cursor').style.transform = 'scale(1)';
+            });
+        });
+        
+        // Interactive effects
+        function playEffect(element) {
+            element.style.transform = 'scale(1.05)';
+            cursor.style.transform = 'scale(1.5)';
+            setTimeout(() => {
+                element.style.transform = '';
+                cursor.style.transform = 'scale(1)';
+            }, 150);
+        }
+        
+        // Add hover effects
+        document.querySelectorAll('.card, .nav-item, .action-btn').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(1.2)';
+            });
+            element.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+            });
+            element.addEventListener('click', () => playEffect(element));
+        });
+        
+        // Side panel toggle
+        const menuBtn = document.querySelectorAll('.nav-item')[1];
+        const sidePanel = document.querySelector('.side-panel');
+        
+        menuBtn.addEventListener('click', () => {
+            sidePanel.classList.toggle('active');
+        });
+        
+        // Parallax effect for background
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            const bgPattern = document.querySelector('.bg-pattern');
+            const offsetX = (mouseX - 0.5) * 20;
+            const offsetY = (mouseY - 0.5) * 20;
+            
+            bgPattern.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        });
+        
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
